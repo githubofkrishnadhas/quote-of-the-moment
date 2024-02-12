@@ -10,6 +10,10 @@ class Colors:
     END = '\033[0m'
 
 def fetch_random_quote():
+    """
+    uses quotable api to get random quotes and format as we wish and display them.
+    :return: quote content, author and genre
+    """
     url = 'http://api.quotable.io/quotes/random'
     response = requests.get(url)
 
@@ -42,6 +46,11 @@ def split_content(content, max_chars):
     return pieces
 
 def render_template(quote):
+    """
+    render the quote properly
+    :param quote:
+    :return:
+    """
     content = quote['content']
     content_length = len(content) - 4
     author_padding = " " * (content_length - len(quote['author']))
@@ -56,7 +65,7 @@ def render_template(quote):
     output += f"\n{author_padding}{Colors.YELLOW}Source - {Colors.GREEN}{quote['author']}\n{Colors.YELLOW}Genre: {', '.join(quote['tags'])}{Colors.END}"
     return output
 
-
+# Flask application and its routes
 @app.route('/quote')
 def get_quote():
     quote = fetch_random_quote()
