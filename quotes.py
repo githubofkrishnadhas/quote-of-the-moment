@@ -1,11 +1,14 @@
+from flask import Flask, jsonify, redirect
+from datetime import datetime
 import requests
-from icecream import ic
 
-# ANSI color codes
+app = Flask(__name__)
+
 class Colors:
     GREEN = '\033[92m'
     YELLOW = '\033[93m'
     END = '\033[0m'
+
 def fetch_random_quote():
     url = 'http://api.quotable.io/quotes/random'
     response = requests.get(url)
@@ -21,13 +24,6 @@ def fetch_random_quote():
     else:
         return None
 
-
-# def render_template(quote):
-#     content_length = len(quote['content']) - 3
-#     author_padding = " " * (content_length - len(quote['author']))
-#     # output = f"Quote: {quote['content']}\n{author_padding}author - {quote['author']}\n\nGenre: {', '.join(quote['tags'])}"
-#     output = f"{Colors.GREEN}Quote: {quote['content']}\n{author_padding}author - {Colors.YELLOW}{quote['author']}\nGenre: {', '.join(quote['tags'])}{Colors.END}"
-#     return output
 def split_content(content, max_chars):
     sentences = content.split('. ')
     pieces = []
@@ -45,16 +41,13 @@ def split_content(content, max_chars):
 
     return pieces
 
-
 def render_template(quote):
     content = quote['content']
-    content_length = len(content) -4
+    content_length = len(content) - 4
     author_padding = " " * (content_length - len(quote['author']))
     output = f"{Colors.YELLOW}Quote:{Colors.GREEN}"
 
-    # Check if the content exceeds the character limit
     if content_length > 130:
-        # Split the content into pieces based on max_chars
         pieces = split_content(content, 130)
         output += '\n'.join(pieces)
     else:
@@ -63,12 +56,46 @@ def render_template(quote):
     output += f"\n{author_padding}{Colors.YELLOW}Source - {Colors.GREEN}{quote['author']}\n{Colors.YELLOW}Genre: {', '.join(quote['tags'])}{Colors.END}"
     return output
 
-if __name__ == "__main__":
+
+@app.route('/quote')
+def get_quote():
     quote = fetch_random_quote()
     if quote:
-        output = render_template(quote)
-        print(output)
-        # ic(output)
+        return jsonify(quote)
     else:
-        print("Failed to fetch a random quote.")
-        # ic("Failed to fetch a random quote.")
+        return jsonify(error="Failed to fetch a random quote."), 500
+
+@app.route('/')
+def redirect_to_quotes():
+    return redirect('/quote')
+
+@app.route('/health')
+def health_check():
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return jsonify(status='Application is active and running', datetime=current_time), 200
+@app.route('/healthz')
+def healthz():
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return jsonify(status='Application is up and running', datetime=current_time), 200
+
+
+# Define a dictionary to store information about available endpoints
+endpoint_info = {
+    '/quote': 'Get a random quote',
+    '/health': 'Check the health of the API',
+    '/healthz': 'Check the health of the Application'
+}
+
+@app.errorhandler(404)
+def not_found(error):
+    error_message = {
+        'Error': 'Not Found',
+        'Message': 'The requested endpoint does not exist.',
+        'Available_endpoints': endpoint_info
+        }
+
+    return jsonify(error_message), 404
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
