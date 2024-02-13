@@ -10,7 +10,10 @@ jobs:
   github-summary-usage:
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:22.04
+      image: dockerofkrishnadhas/jenkins-azcli-slave:latest
+      credentials:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
     steps:
       - name: echo stmts
         run: echo "## this is github summary :pushpin:" >> $GITHUB_STEP_SUMMARY
