@@ -1,9 +1,6 @@
 name: Build and Push Docker Image
 
 on:
-  pull_request:
-    types:
-      - opened
   workflow_dispatch:
     inputs:
       image_name:
