@@ -20,7 +20,7 @@ jobs:
       - name: date time
         run: date >> $GITHUB_STEP_SUMMARY
       - name: check previous stage
-        if: ${{ success()}
+        if: ${{ success() }}
         run: echo "# You are awesome"
       - name: completion
         run: echo "This is completed :rocket:" >> $GITHUB_STEP_SUMMARY
