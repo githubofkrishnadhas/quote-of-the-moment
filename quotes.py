@@ -75,7 +75,7 @@ def get_quote():
         return jsonify(error="Failed to fetch a random quote."), 500
 
 @app.route('/')
-def redirect_to_quotes():
+def redirect_to_quote():
     return redirect('/quote')
 
 @app.route('/health')
