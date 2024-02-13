@@ -87,6 +87,11 @@ def healthz():
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     return jsonify(status='Application is up and running', datetime=current_time), 200
 
+# Running a Flask application with debug mode enabled may allow an attacker to gain access through the Werkzeug debugger.
+# By visiting /crash, it is possible to gain access to the debugger, and run arbitrary code through the interactive debugger.
+@app.route('/crash')
+def crash_exception():
+    raise Exception()
 
 # Define a dictionary to store information about available endpoints
 endpoint_info = {
@@ -106,5 +111,5 @@ def not_found(error):
     return jsonify(error_message), 404
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
 
