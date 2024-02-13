@@ -1,0 +1,20 @@
+name: github summary
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        type: string
+        default: 'githubofkrishnadhas'
+run-name: github-summary-usage
+jobs:
+  github-summary-usage:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:22.04
+    steps:
+      - name: echo stmts
+        run: echo "## this is github summary:pushpin:" >> $GITHUB_STEP_SUMMARY
+      - name: date time
+        run: date >> $GITHUB_STEP_SUMMARY
+      - name: completion
+        run: echo "This is completed :rocket:"
