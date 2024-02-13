@@ -13,8 +13,8 @@ jobs:
       image: ubuntu:22.04
     steps:
       - name: echo stmts
-        run: echo "## this is github summary:pushpin:" >> $GITHUB_STEP_SUMMARY
+        run: echo "## this is github summary :pushpin:" >> $GITHUB_STEP_SUMMARY
       - name: date time
         run: date >> $GITHUB_STEP_SUMMARY
       - name: completion
-        run: echo "This is completed :rocket:"
+        run: echo "This is completed :rocket:" >> $GITHUB_STEP_SUMMARY
