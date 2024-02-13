@@ -25,13 +25,13 @@ on:
 
 run-name: building image ${{ inputs.image_name }}/${{ inputs.tag }}
 jobs:
-  build-and-push:
+  build-and-push-docker-image:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
@@ -50,4 +50,4 @@ jobs:
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.image_name }}:${{ inputs.tag }}
 
     - name: Build completed
-      use: echo "Image build completed"
+      run: echo "Image build completed"
